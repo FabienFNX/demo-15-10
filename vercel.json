@@ -1,0 +1,14 @@
+{
+    "builds": [
+      {
+        "src": "pizza_assistant_api.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "pizza_assistant_api.py"
+      }
+    ]
+  }
