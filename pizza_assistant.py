@@ -1,4 +1,7 @@
-from openai import OpenAI
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import SystemMessage
+from langchain_core.prompts.chat import MessagesPlaceholder
 
 class PizzaAssistant:
     """A pizza recommendation assistant powered by OpenAI's API."""
@@ -35,16 +38,12 @@ class PizzaAssistant:
     """
 
     def __init__(self, model: str):
-        self.client = OpenAI()
-        self.model = model
+        self.client = ChatOpenAI(model_name=model)
 
     def call(self, conversation: list):
         """Call the assistant with a conversation."""
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[
-                {"role": "system", "content": self.SYSTEM_PROMPT},
-                *conversation
-            ]
-        )
-        return response.choices[0].message.content
+        messages = [SystemMessage(self.SYSTEM_PROMPT), MessagesPlaceholder("conversation")]
+        prompt = ChatPromptTemplate.from_messages(messages)
+        chain = prompt | self.client
+        result = chain.invoke({"conversation": conversation})
+        return result
