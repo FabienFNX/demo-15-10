@@ -46,4 +46,4 @@ class PizzaAssistant:
         prompt = ChatPromptTemplate.from_messages(messages)
         chain = prompt | self.client
         result = chain.invoke({"conversation": conversation})
-        return result
+        return result.content
